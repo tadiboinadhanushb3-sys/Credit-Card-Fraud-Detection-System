@@ -76,19 +76,7 @@ def send_sms_alert(alert_time, amount):
         print(f"Failed to send SMS: {e}")
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Fraud Detection", layout="wide")
-
-# Add Neat Background
-st.markdown("""
-<style>
-/* App background setup */
-.stApp {
-    background-color: #f4f6fa; 
-    background-image: radial-gradient(#c7d4e8 1.5px, transparent 1.5px);
-    background-size: 24px 24px;
-}
-</style>
-""", unsafe_allow_html=True)
+st.set_page_config(page_title="Fraud Detection Dashboard", layout="wide")
 
 # ---------------- LOGO FUNCTION ----------------
 def get_base64_image(image_path):
@@ -98,100 +86,257 @@ def get_base64_image(image_path):
     return None
 
 logo_base64 = get_base64_image("rce.png")
+logo_html = f'<img src="data:image/png;base64,{logo_base64}" width="700" style="margin-bottom: 60px;">' if logo_base64 else ''
 
-# ---------------- HEADER ----------------
-col1, col2 = st.columns([3, 1])
+# Add Custom FinTech Animated Background and Professional Banner
+st.markdown(f"""
+<style>
 
-with col1:
-    if logo_base64:
-        st.image(f"data:image/png;base64,{logo_base64}", width=150)
+/* ---------------- Background ---------------- */
+.stApp {{
+    background: radial-gradient(circle at 50% 50%, #0a1128 0%, #000000 100%);
+}}
 
-    st.markdown("""
-    <h1 style='color:#2E86C1; margin-bottom:0;'>
-        Ramachandra College of Engineering
-    </h1>
-    <h3 style='margin-top:5px;'>
-        💳 Credit Card Fraud Detection System
-    </h3>
-    """, unsafe_allow_html=True)
+.stApp::before {{
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image:
+        linear-gradient(rgba(0,210,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,210,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -2;
+    pointer-events: none;
+}}
 
-with col2:
-    st.markdown("""
-    <div style='text-align:right; margin-top:35px; white-space: nowrap;'>
-        <div style='display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #1A5276 0%, #2980B9 100%); color: white; border-radius: 25px; font-weight: 600; font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); font-size: 15px; letter-spacing: 0.5px;'>
-            🧠 Artificial Intelligence & Data Science
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+/* ---------------- Animation ---------------- */
+@keyframes flow {{
+    0% {{ transform: translateY(-100%); opacity: 0; }}
+    50% {{ opacity: 0.8; }}
+    100% {{ transform: translateY(100vh); opacity: 0; }}
+}}
 
-st.markdown("<hr>", unsafe_allow_html=True)
+.data-flow {{
+    position: fixed;
+    top: 0;
+    width: 2px;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, #00d2ff, transparent);
+    opacity: 0;
+    z-index: -1;
+    animation: flow 6s infinite linear;
+    pointer-events: none;
+}}
+
+.data-flow:nth-child(1) {{ left: 15%; animation-delay: 0s; }}
+.data-flow:nth-child(2) {{ left: 35%; animation-delay: 2.5s; }}
+.data-flow:nth-child(3) {{ left: 55%; animation-delay: 5s; }}
+.data-flow:nth-child(4) {{ left: 75%; animation-delay: 1.5s; }}
+.data-flow:nth-child(5) {{ left: 95%; animation-delay: 4s; }}
+
+/* ---------------- UI Enhancements ---------------- */
+.banner-container {{
+    background: linear-gradient(135deg, rgba(10,25,47,0.95), rgba(2,12,27,0.98));
+    border-left: 6px solid #00d2ff;
+    border-right: 6px solid #00d2ff;
+    border-radius: 16px;
+    padding: 45px 20px;
+    margin-bottom: 40px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,210,255,0.15);
+}}
+
+.college-name {{ font-size: 80px; font-weight: 900; letter-spacing: 2px; color: #e6f1ff; }}
+.autonomous-text {{ font-size: 32px; color: #94a3b8; margin-bottom: 20px; }}
+.project-title {{ font-size: 90px; font-weight: 900; color: #ffd700; margin: 10px 0; line-height: 1.2; text-shadow: 0px 4px 15px rgba(255,215,0,0.3); }}
+.subtitle {{ font-size: 46px; color: #64ffda; margin-bottom: 25px; }}
+.team-section {{ display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; }}
+.team-member {{ background: rgba(100,255,218,0.08); padding: 12px 28px; border-radius: 40px; font-size: 28px; color: #ccd6f6; border: 1px solid rgba(100,255,218,0.15); }}
+
+.section-card {{
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin: 20px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}}
+
+.section-title {{
+    font-size: 50px;
+    font-weight: 800;
+    color: #00d2ff;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 210, 255, 0.3);
+    padding-bottom: 10px;
+}}
+
+/* Ensure all default Streamlit text handles dark mode */
+.stApp p, .stApp label, .stMarkdown {{
+    color: #e2e8f0 !important;
+    font-size: 24px !important;
+}}
+.stApp h1 {{ font-size: 60px !important; color: #e2e8f0 !important; }}
+.stApp h2 {{ font-size: 50px !important; color: #e2e8f0 !important; }}
+.stApp h3 {{ font-size: 40px !important; color: #e2e8f0 !important; }}
+div[data-testid="stDataFrame"] * {{
+    font-size: 20px !important;
+}}
+
+/* Enlarging Metrics */
+[data-testid="stMetricValue"] {{
+    font-size: 64px !important;
+    font-weight: bold !important;
+    color: #ffd700 !important;
+}}
+[data-testid="stMetricLabel"] {{
+    font-size: 30px !important;
+    color: #64ffda !important;
+}}
+
+/* Prediction styling */
+.huge-prob {{
+    font-size: 70px;
+    font-weight: bold;
+    color: #E74C3C;
+    text-align: center;
+    margin: 20px 0;
+    text-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}}
+.safe-prob {{
+    font-size: 50px;
+    font-weight: bold;
+    color: #28B463;
+    text-align: center;
+    margin: 20px 0;
+    text-shadow: 0 0 10px rgba(40, 180, 99, 0.4);
+}}
+
+/* Enlarging upload text globally */
+.stFileUploader label {{
+    font-size: 20px !important;
+}}
+
+</style>
+
+<div class="data-flow"></div>
+<div class="data-flow"></div>
+<div class="data-flow"></div>
+<div class="data-flow"></div>
+<div class="data-flow"></div>
+
+<div class="banner-container">
+{logo_html}
+<div class="college-name">RAMACHANDRA COLLEGE OF ENGINEERING</div>
+<div class="autonomous-text">AUTONOMOUS</div>
+<div class="project-title">CREDIT CARD FRAUD DETECTION SYSTEM</div>
+<div class="subtitle">ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</div>
+<div class="team-section">
+<div class="team-member">24ME1A5467 – L. Chandana Sasi</div>
+<div class="team-member">24ME1A54B4 – T. Akshaya</div>
+<div class="team-member">24ME1A54C7 – V. Madhuri</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 # ---------------- Load Dataset ----------------
 @st.cache_data
 def load_data(file):
     return pd.read_csv(file)
 
-# ---------------- Upload ----------------
-st.markdown("## 📂 Upload Dataset")
-uploaded_file = st.file_uploader("Upload creditcard.csv", type=["csv"])
+# ---------------- Upload Section ----------------
+st.markdown('<div class="section-card">', unsafe_allow_html=True)
+st.markdown('<div class="section-title">📂 Upload Dataset</div>', unsafe_allow_html=True)
+st.markdown("<p style='font-size: 20px; color: #a0aec0;'>Please upload your transaction CSV file below. The system automatically detects the features and the target variable.</p>", unsafe_allow_html=True)
+uploaded_file = st.file_uploader("", type=["csv"])
+st.markdown('</div>', unsafe_allow_html=True)
 
 if uploaded_file is not None:
     data = load_data(uploaded_file)
+    
+    # Auto-detect target column
+    possible_targets = ["Class", "Fraud", "Target", "Label", "is_fraud"]
+    target_col = None
+    for pt in possible_targets:
+        if pt in data.columns:
+            target_col = pt
+            break
+            
+    if target_col is None:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.warning("⚠️ Target column not auto-detected.")
+        target_col = st.selectbox("Please select the target column manually:", data.columns)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # ---------------- Dashboard Additions ----------------
-    st.markdown("## 📈 Dashboard Overview")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📈 System Dashboard</div>', unsafe_allow_html=True)
+    
     total_txn = len(data)
-    fraud_txn = len(data[data["Class"] == 1])
-    safe_txn = len(data[data["Class"] == 0])
+    fraud_txn = len(data[data[target_col] == 1])
+    safe_txn = len(data[data[target_col] == 0])
     fraud_pct = (fraud_txn / total_txn) * 100
 
     col_dash1, col_dash2, col_dash3, col_dash4 = st.columns(4)
     col_dash1.metric("Total Transactions", f"{total_txn:,}")
     col_dash2.metric("Safe Transactions", f"{safe_txn:,}")
-    col_dash3.metric("Fraud Transactions (1s)", f"{fraud_txn:,}")
+    col_dash3.metric("Fraud Transactions", f"{fraud_txn:,}")
     col_dash4.metric("Fraud Percentage", f"{fraud_pct:.3f}%")
-
-    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ---------------- Preview ----------------
-    st.markdown("## 📊 Dataset Preview")
-    st.dataframe(data.head())
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📊 Dataset Overview</div>', unsafe_allow_html=True)
+    st.write(f"<p style='font-size: 22px;'>Dataset Shape: <b>{data.shape[0]:,}</b> Rows & <b>{data.shape[1]}</b> Columns</p>", unsafe_allow_html=True)
+    
+    # Styled dataframe
+    def highlight_fraud(row):
+        return ['background-color: rgba(231, 76, 60, 0.3)' if row[target_col] == 1 else '' for _ in row]
 
-    st.write("### 🚨 Fraudulent Transactions Highlight")
-    st.dataframe(data[data["Class"] == 1].head(10))
-
-    st.write("### 📐 Dataset Shape")
-    st.write(f"Rows: **{data.shape[0]}**, Columns: **{data.shape[1]}**")
+    st.write("<p style='font-size: 20px;'>Sample Data (Fraudulent rows highlighted in red):</p>", unsafe_allow_html=True)
+    st.dataframe(data.head(50).style.apply(highlight_fraud, axis=1), use_container_width=True, height=400)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ---------------- Visualizations ----------------
-    st.markdown("## 📉 Visualizations")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📉 Visual Data Analysis</div>', unsafe_allow_html=True)
+    
     col_vis1, col_vis2 = st.columns(2)
-
     with col_vis1:
-        st.write("### 📊 Class Distribution (0 = Safe, 1 = Fraud)")
+        st.write(f"### 📊 Distribution of {target_col}")
         fig, ax = plt.subplots(figsize=(6, 4))
-        sns.countplot(x="Class", hue="Class", data=data, palette=["#28B463", "#E74C3C"], ax=ax, legend=False)
-        ax.set_title("Transaction Class Distribution")
+        sns.countplot(x=target_col, data=data, palette=["#28B463", "#E74C3C"], ax=ax)
+        ax.set_title(f"{target_col} Distribution", fontsize=14, fontweight='bold')
         st.pyplot(fig)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ---------------- Model Training ----------------
-    st.markdown("## ⚙️ Model Training & Evaluation")
-    st.info("Applying SMOTE to handle class imbalance before training models...", icon="ℹ️")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">⚙️ Model Training & Evaluation</div>', unsafe_allow_html=True)
+    st.info("Applying SMOTE to handle class imbalance and training comparative models...", icon="ℹ️")
 
-    X = data.drop(["Class", "Time"], axis=1)
-    y = data["Class"]
+    # Drop Time if it exists
+    drop_cols = [target_col]
+    if "Time" in data.columns:
+        drop_cols.append("Time")
+        
+    X = data.drop(drop_cols, axis=1)
+    y = data[target_col]
 
     # Stratified Sampling to ensure we have fraud cases (avoid complete class 0 sample)
     sample_size = min(10000, len(data))
-    fraud_indices = data[data["Class"] == 1].index
-    safe_indices = data[data["Class"] == 0].index
+    fraud_indices = data[data[target_col] == 1].index
+    safe_indices = data[data[target_col] == 0].index
     
     if len(fraud_indices) > 0:
         fraud_sample = data.loc[fraud_indices].sample(min(500, len(fraud_indices)), random_state=42)
         safe_sample = data.loc[safe_indices].sample(min(sample_size - len(fraud_sample), len(safe_indices)), random_state=42)
         sampled_data = pd.concat([fraud_sample, safe_sample]).sample(frac=1, random_state=42)
-        X_sample = sampled_data.drop(["Class", "Time"], axis=1)
-        y_sample = sampled_data["Class"]
+        X_sample = sampled_data.drop(drop_cols, axis=1)
+        y_sample = sampled_data[target_col]
     else:
         # Fallback if no frauds in uploaded dataset
         X_sample = X.sample(sample_size, random_state=42)
@@ -247,9 +392,8 @@ if uploaded_file is not None:
 
     results_df = pd.DataFrame(results)
     
-    st.write("### 🏆 Model Comparison")
-    # Highlight the maximum values in the dataframe safely
-    st.dataframe(results_df.style.highlight_max(subset=["Accuracy", "F1 Score", "ROC-AUC"], color='lightgreen'))
+    st.write("### 🏆 Model Comparison Results")
+    st.dataframe(results_df.style.highlight_max(subset=["Accuracy", "F1 Score", "ROC-AUC"], color='rgba(40,180,99,0.5)'), use_container_width=True)
 
     # Best model selection by highest F1 Score (since detecting fraud is the goal)
     best_model_row = results_df.sort_values(by="F1 Score", ascending=False).iloc[0]
@@ -293,9 +437,11 @@ if uploaded_file is not None:
         ax.set_title("Top 10 Important Features")
         ax.set_xlabel("Relative Importance")
         st.pyplot(fig)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ---------------- Explainable AI ----------------
-    st.markdown("## 🧠 Explainable AI (SHAP)")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🧠 Explainable AI (SHAP)</div>', unsafe_allow_html=True)
     if st.checkbox("🔍 Analyze predictions with SHAP (Takes a moment)"):
         with st.spinner("Calculating SHAP values..."):
             try:
@@ -307,7 +453,6 @@ if uploaded_file is not None:
                     shap_values = explainer.shap_values(X_test_sample)
                     
                     fig, ax = plt.subplots(figsize=(8, 6))
-                    # Handle shapes varying by model
                     if isinstance(shap_values, list):
                         shap.summary_plot(shap_values[1], X_test_sample, show=False)
                     else:
@@ -326,136 +471,120 @@ if uploaded_file is not None:
                     st.pyplot(fig)
             except Exception as e:
                 st.error(f"⚠️ SHAP visualization failed for {best_model_name}: {e}")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ---------------- Prediction ----------------
-    st.markdown("## 🔍 Predict a Transaction")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🔍 Real-time Active Prediction System</div>', unsafe_allow_html=True)
 
-    st.write("Modify the threshold and input values to simulate a transaction.")
-    threshold = st.slider("Fraud Probability Threshold", min_value=0.0, max_value=1.0, value=0.50, step=0.01)
+    st.write("<p style='font-size: 20px;'>Dynamically inject values corresponding to the detected dataset schema to test the model's prediction.</p>", unsafe_allow_html=True)
+    threshold = st.slider("Fraud Probability Threshold (Sensitivity)", min_value=0.0, max_value=1.0, value=0.50, step=0.01)
 
+    st.markdown("### 🧩 Input Transaction Data")
     input_data = {}
-    col_input = st.columns(5)
     
-    input_cols = X.columns[:10]
-    for i, feature in enumerate(input_cols):
-        with col_input[i % 5]:
-            input_data[feature] = st.number_input(feature, value=0.0)
+    # Dynamically generate input fields in 4 columns
+    input_cols = X.columns
+    cols_per_row = 4
+    
+    for i in range(0, len(input_cols), cols_per_row):
+        row_cols = st.columns(cols_per_row)
+        for j, feature in enumerate(input_cols[i:i+cols_per_row]):
+            with row_cols[j]:
+                input_data[feature] = st.number_input(feature, value=0.0, format="%.4f")
 
     input_df = pd.DataFrame([input_data])
+    
+    st.write("") # spacer
 
-    if st.button("📧 Send Test Email"):
-        send_email_alert("TEST_TIME", 100.0, 0.95)
-        st.success("Test email triggered")
+    col_btn1, col_btn2 = st.columns([1, 4])
+    with col_btn1:
+        if st.button("📧 Send Test Alert"):
+            send_email_alert("TEST_TIME", 100.0, 0.95)
+            st.success("Test email triggered")
 
-    if st.button("Predict Fraud"):
-        for col in X.columns:
-            if col not in input_df.columns:
-                input_df[col] = 0
+    with col_btn2:
+        if st.button("🚨 Evaluate Transaction", type="primary", use_container_width=True):
+            # Predict
+            prob = best_model.predict_proba(input_df)[0][1]
+            prediction = 1 if prob >= threshold else 0
 
-        input_df = input_df[X.columns]
-        
-        prob = best_model.predict_proba(input_df)[0][1]
-        prediction = 1 if prob >= threshold else 0
+            st.markdown("---")
+            if prediction == 1:
+                st.markdown(f'<div class="huge-prob">Probability of Fraud: {prob*100:.2f}%</div>', unsafe_allow_html=True)
+                
+                alert_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                amount_val = input_df["Amount"].iloc[0] if "Amount" in input_df.columns else 0.0
+                
+                st.markdown(f"""
+                <div style="background: rgba(231, 76, 60, 0.15); padding: 20px; border-radius: 12px; border: 2px solid #E74C3C; text-align: center;">
+                    <h2 style="color: #E74C3C; margin: 0; font-size: 36px;">🚨 FRUAD DETECTED</h2>
+                    <p style="color: #ffcccc; font-size: 20px; margin-top: 10px;">Bank and Admin Have Been Notified.</p>
+                    <p style="color: white; font-size: 18px;">🕒 Time: {alert_time} | Threshold Exceeded: {threshold*100:.0f}%</p>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Log to CSV
+                log_file = "fraud_log.csv"
+                new_log = pd.DataFrame([{
+                    "Time": alert_time,
+                    "Amount": amount_val,
+                    "Prediction": "Fraud",
+                    "Probability": f"{prob*100:.2f}%"
+                }])
+                
+                if os.path.exists(log_file):
+                    new_log.to_csv(log_file, mode='a', header=False, index=False)
+                else:
+                    new_log.to_csv(log_file, mode='w', header=True, index=False)
+                
+                # Send Notification
+                send_email_alert(alert_time, amount_val, prob)
+                send_sms_alert(alert_time, amount_val)
 
-        st.markdown(f"### Probability of Fraud: **{prob*100:.2f}%**")
-
-        if prediction == 1:
-            alert_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            amount_val = input_df["Amount"].iloc[0] if "Amount" in input_df.columns else 0.0
-            
-            st.markdown(f"""
-            <div style="background-color: #ffcccc; padding: 15px; border-radius: 8px; border-left: 8px solid red; margin-bottom: 10px;">
-                <h3 style="color: red; margin: 0;">🚨 Fraud Detected – Bank Notified</h3>
-                <p style="color: #660000; font-weight: bold; margin: 5px 0 0 0;">🕒 Alert Time: {alert_time} | Exceeded Threshold: {threshold*100:.0f}%</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Log to CSV
-            log_file = "fraud_log.csv"
-            new_log = pd.DataFrame([{
-                "Time": alert_time,
-                "Amount": amount_val,
-                "Prediction": "Fraud",
-                "Probability": f"{prob*100:.2f}%"
-            }])
-            
-            if os.path.exists(log_file):
-                new_log.to_csv(log_file, mode='a', header=False, index=False)
             else:
-                new_log.to_csv(log_file, mode='w', header=True, index=False)
+                st.markdown(f'<div class="safe-prob">Probability of Fraud: {prob*100:.2f}%</div>', unsafe_allow_html=True)
+                st.markdown("""
+                <div style="background: rgba(40, 180, 99, 0.15); padding: 20px; border-radius: 12px; border: 2px solid #28B463; text-align: center;">
+                    <h2 style="color: #28B463; margin: 0; font-size: 36px;">✅ SAFE TRANSACTION</h2>
+                    <p style="color: #ccffcc; font-size: 20px; margin-top: 10px;">Transaction looks normal and is verified.</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Download result logic
+            pred_result = input_df.copy()
+            pred_result["Fraud_Probability"] = f"{prob*100:.2f}%"
+            pred_result["Prediction"] = "Fraud Detected" if prediction == 1 else "Safe Transaction"
             
-            # Send Notification
-            send_email_alert(alert_time, amount_val, prob)
-            send_sms_alert(alert_time, amount_val)
-
-        else:
-            st.success(f"✅ **Safe Transaction!** (Below {threshold*100:.0f}% threshold)")
-
-        # Download result logic
-        pred_result = input_df.copy()
-        pred_result["Fraud_Probability"] = f"{prob*100:.2f}%"
-        pred_result["Prediction"] = "Fraud Detected" if prediction == 1 else "Safe Transaction"
-        
-        csv = pred_result.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Download Prediction Result as CSV",
-            data=csv,
-            file_name="prediction_result.csv",
-            mime="text/csv",
-        )
-
-        # Fraud Logs System UI
-        st.markdown("---")
-        st.markdown("### 📋 Fraud Logs System")
-        if os.path.exists("fraud_log.csv"):
-            fraud_logs_df = pd.read_csv("fraud_log.csv")
-            st.dataframe(fraud_logs_df.tail(5)) # show recent 5 logs
-            
-            csv_log = fraud_logs_df.to_csv(index=False).encode('utf-8')
+            csv = pred_result.to_csv(index=False).encode('utf-8')
             st.download_button(
-                label="📥 Download fraud_log.csv",
-                data=csv_log,
-                file_name="fraud_log.csv",
+                label="📥 Download Prediction Receipt",
+                data=csv,
+                file_name="prediction_receipt.csv",
                 mime="text/csv",
             )
-        else:
-            st.info("No fraud logs generated yet.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ---------------- Fraud Logs System ----------------
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📋 Secure Fraud Logs System</div>', unsafe_allow_html=True)
+    if os.path.exists("fraud_log.csv"):
+        fraud_logs_df = pd.read_csv("fraud_log.csv")
+        st.write("<p style='font-size: 18px;'>Latest Registered Fraud Incidents:</p>", unsafe_allow_html=True)
+        st.dataframe(fraud_logs_df.tail(10), use_container_width=True)
+        
+        csv_log = fraud_logs_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Export Fraud Incident Logs",
+            data=csv_log,
+            file_name="fraud_log.csv",
+            mime="text/csv",
+        )
+    else:
+        st.info("No recorded fraud incidents yet.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 else:
-    st.info("👆 Please upload the creditcard.csv file to proceed.")
+    st.info("👆 Please securely upload your transaction dataset (CSV format) to activate the intelligent monitoring system.")
     if not os.path.exists("rce.png"):
         pass
-
-# ---------------- FOOTER ----------------
-st.markdown("""
-<style>
-.footer-box {
-    background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-    text-align: center;
-    margin-top: 40px;
-}
-
-.footer-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2E86C1;
-    margin-bottom: 12px;
-}
-
-.footer-ids {
-    font-size: 20px;
-    color: #333;
-    letter-spacing: 1px;
-}
-</style>
-
-<div class="footer-box">
-    <div class="footer-title">Team IDs</div>
-    <div class="footer-ids">
-        24ME1A54B4 | 24ME1A54C7 | 24ME1A5467 | 24ME1A54B3
-    </div>
-</div>
-""", unsafe_allow_html=True)
